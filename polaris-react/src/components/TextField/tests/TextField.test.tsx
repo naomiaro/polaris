@@ -5,6 +5,7 @@ import {Connected} from '../../Connected';
 import {InlineError} from '../../InlineError';
 import {Labelled} from '../../Labelled';
 import {Select} from '../../Select';
+import {Tag} from '../../Tag';
 import {Resizer, Spinner} from '../components';
 import {TextField} from '../TextField';
 import styles from '../TextField.scss';
@@ -547,6 +548,58 @@ describe('<TextField />', () => {
     });
   });
 
+  describe('verticalContent', () => {
+    it('connects the input to the inline vertical content and label', () => {
+      const tags = ['Antique'];
+      const verticalContent = tags.map((tag) => <Tag key={tag}>{tag}</Tag>);
+      const textField = mountWithApp(
+        <TextField
+          label="TextField"
+          onChange={noop}
+          autoComplete="off"
+          verticalContent={verticalContent}
+        />,
+      );
+      const labels = textField
+        .find('input')!
+        .prop('aria-labelledby')!
+        .split(' ');
+      expect(labels).toHaveLength(2);
+
+      expect(
+        textField.find('label', {
+          id: `${labels[0]}`,
+        }),
+      )!.toContainReactText('TextField');
+
+      expect(
+        textField.find('div', {
+          id: `${labels[1]}`,
+        }),
+      )!.toContainReactText('Antique');
+    });
+
+    it('sets focus on the input when focused', () => {
+      const tags = ['Rustic'];
+      const verticalContent = tags.map((tag) => (
+        <Tag key={tag} onRemove={noop}>
+          {tag}
+        </Tag>
+      ));
+      const textField = mountWithApp(
+        <TextField
+          label="TextField"
+          onChange={noop}
+          autoComplete="off"
+          verticalContent={verticalContent}
+          focused
+        />,
+      );
+
+      expect(document.activeElement).toBe(textField.find('input')!.domNode);
+    });
+  });
+
   describe('characterCount', () => {
     it('displays number of characters entered in input field', () => {
       const textField = mountWithApp(
@@ -562,7 +615,7 @@ describe('<TextField />', () => {
 
       expect(
         textField.find('div', {
-          id: 'MyFieldCharacterCounter',
+          id: 'MyField-CharacterCounter',
         }),
       ).toContainReactText('4');
     });
@@ -582,7 +635,7 @@ describe('<TextField />', () => {
 
       expect(
         textField.find('div', {
-          id: 'MyFieldCharacterCounter',
+          id: 'MyField-CharacterCounter',
         }),
       ).toContainReactText('4/10');
     });
@@ -600,7 +653,7 @@ describe('<TextField />', () => {
       );
 
       expect(textField).toContainReactComponent('div', {
-        id: 'MyFieldCharacterCounter',
+        id: 'MyField-CharacterCounter',
         'aria-live': 'off',
       });
 
@@ -611,7 +664,7 @@ describe('<TextField />', () => {
       textFieldDiv.trigger('onClick', {target: textFieldDiv.domNode!});
 
       expect(textField).toContainReactComponent('div', {
-        id: 'MyFieldCharacterCounter',
+        id: 'MyField-CharacterCounter',
         'aria-live': 'polite',
       });
     });

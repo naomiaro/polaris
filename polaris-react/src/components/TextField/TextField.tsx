@@ -52,6 +52,8 @@ interface NonMutuallyExclusiveProps {
   prefix?: React.ReactNode;
   /** Text to display after value */
   suffix?: React.ReactNode;
+  /** Content to vertically display before value */
+  verticalContent?: React.ReactNode;
   /** Hint text to display */
   placeholder?: string;
   /** Initial value for the input */
@@ -150,6 +152,7 @@ export type TextFieldProps = NonMutuallyExclusiveProps &
 export function TextField({
   prefix,
   suffix,
+  verticalContent,
   placeholder,
   value,
   helpText,
@@ -204,6 +207,7 @@ export function TextField({
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const prefixRef = useRef<HTMLDivElement>(null);
   const suffixRef = useRef<HTMLDivElement>(null);
+  const verticalContentRef = useRef<HTMLDivElement>(null);
   const buttonPressTimer = useRef<number>();
 
   useEffect(() => {
@@ -234,13 +238,13 @@ export function TextField({
   const inputType = type === 'currency' ? 'text' : type;
 
   const prefixMarkup = prefix ? (
-    <div className={styles.Prefix} id={`${id}Prefix`} ref={prefixRef}>
+    <div className={styles.Prefix} id={`${id}-Prefix`} ref={prefixRef}>
       {prefix}
     </div>
   ) : null;
 
   const suffixMarkup = suffix ? (
-    <div className={styles.Suffix} id={`${id}Suffix`} ref={suffixRef}>
+    <div className={styles.Suffix} id={`${id}-Suffix`} ref={suffixRef}>
       {suffix}
     </div>
   ) : null;
@@ -268,7 +272,7 @@ export function TextField({
 
     characterCountMarkup = (
       <div
-        id={`${id}CharacterCounter`}
+        id={`${id}-CharacterCounter`}
         className={characterCountClassName}
         aria-label={characterCountLabel}
         aria-live={focus ? 'polite' : 'off'}
@@ -386,17 +390,21 @@ export function TextField({
     describedBy.push(helpTextID(id));
   }
   if (showCharacterCount) {
-    describedBy.push(`${id}CharacterCounter`);
+    describedBy.push(`${id}-CharacterCounter`);
   }
 
   const labelledBy: string[] = [];
 
   if (prefix) {
-    labelledBy.push(`${id}Prefix`);
+    labelledBy.push(`${id}-Prefix`);
   }
 
   if (suffix) {
-    labelledBy.push(`${id}Suffix`);
+    labelledBy.push(`${id}-Suffix`);
+  }
+
+  if (verticalContent) {
+    labelledBy.push(`${id}-VerticalContent`);
   }
 
   labelledBy.unshift(labelID(id));
@@ -457,6 +465,17 @@ export function TextField({
     ...normalizeAriaMultiline(multiline),
   });
 
+  const inputWithVerticalContentMarkup = verticalContent ? (
+    <div
+      className={styles.VerticalContent}
+      id={`${id}-VerticalContent`}
+      ref={verticalContentRef}
+    >
+      {verticalContent}
+      {input}
+    </div>
+  ) : null;
+
   const backdropClassName = classNames(
     styles.Backdrop,
     connectedLeft && styles['Backdrop-connectedLeft'],
@@ -481,7 +500,7 @@ export function TextField({
           onClick={handleClick}
         >
           {prefixMarkup}
-          {input}
+          {verticalContent ? inputWithVerticalContentMarkup : input}
           {suffixMarkup}
           {characterCountMarkup}
           {clearButtonMarkup}
