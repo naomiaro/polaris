@@ -7,6 +7,7 @@ Use [the changelog guidelines](/documentation/Versioning%20and%20changelog.md) t
 ### Enhancements
 
 - Updated `Listbox` to only scroll when active option outside of view ([#5401](https://github.com/Shopify/polaris/pull/5401/))
+- Added `verticalContent` to `TextField` to allow inline vertical content with `max-height` styling and examples ([#5392](https://github.com/Shopify/polaris/pull/5392/))
 - Added visual density updates to `Tag` component for mobile view ([#5353](https://github.com/Shopify/polaris/pull/5353))
 - Added visual density updates to `Tag` component ([#5312](https://github.com/Shopify/polaris/pull/5312))
 - Added `ReactNode` as an accepted prop type to `secondaryActions` on the `Page` component ([#5258](https://github.com/Shopify/polaris-react/pull/5258))
