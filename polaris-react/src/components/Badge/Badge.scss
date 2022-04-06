@@ -115,3 +115,9 @@
 .withinFilter {
   border-radius: var(--p-border-radius-1);
 }
+
+.Icon {
+  + *:not(.Icon) {
+    margin-left: var(--p-space-1);
+  }
+}
