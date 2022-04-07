@@ -4,6 +4,7 @@
     "rootDir": "./",
     "noEmit": false,
     "emitDeclarationOnly": true,
+    "composite": true,
     "incremental": true,
     "outDir": "build/ts/latest",
     "declarationMap": false,
@@ -14,5 +15,12 @@
       "tests/*": ["./tests/*"]
     }
   },
-  "include": ["./config/typescript", "./src", "./tests", "./playground"]
+  "include": [
+    "./config/typescript",
+    "./src",
+    "./src/**/*.json",
+    "./locales/**/*.json",
+    "./tests",
+    "./playground"
+  ]
 }
